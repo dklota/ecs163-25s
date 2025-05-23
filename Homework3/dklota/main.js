@@ -3,19 +3,24 @@ const width = window.innerWidth;
 const height = window.innerHeight;
 
 let scatterLeft = 0, scatterTop = 0;
-let scatterMargin = {top: 40, right: 30, bottom: 30, left: 70},
-    scatterWidth = 400 - scatterMargin.left - scatterMargin.right,
-    scatterHeight = 350 - scatterMargin.top - scatterMargin.bottom;
+let scatterMargin = {top: 30, right: 30, bottom: 30, left: 80},
+    scatterWidth = 600 - scatterMargin.left - scatterMargin.right,
+    scatterHeight = 400 - scatterMargin.top - scatterMargin.bottom;
 
-let distrLeft = 400, distrTop = 0;
+let distrLeft = 0, distrTop = 0;
 let distrMargin = {top: 10, right: 30, bottom: 30, left: 60},
-    distrWidth = 400 - distrMargin.left - distrMargin.right,
-    distrHeight = 350 - distrMargin.top - distrMargin.bottom;
- 
-let barLeft = 0, barTop = 400;
-let barMargin = {top: 10, right: 30, bottom: 30, left: 60},
-    barWidth = width - barMargin.left - barMargin.right,
-    barHeight = height-450 - barMargin.top - barMargin.bottom;
+    distrWidth = 700 - distrMargin.left - distrMargin.right,
+    distrHeight = 500 - distrMargin.top - distrMargin.bottom;
+
+let barLeft = 0, barTop = 0;
+let barMargin = {top: 20, right: 30, bottom: 30, left: 60},
+    barWidth = 700 - barMargin.left - barMargin.right,
+    barHeight = 400 - barMargin.top - barMargin.bottom;;
+
+let sankeyLeft = 0, sankeyTop = 800;
+let sankeyMargin = { top: 20, right: 30, bottom: 20, left: 30 },
+    sankeyWidth = 700 - sankeyMargin.left - sankeyMargin.right,
+    sankeyHeight = 350;
 
 // plots
 d3.csv("data/cosmetics.csv").then(rawData =>{
@@ -66,168 +71,204 @@ d3.csv("data/cosmetics.csv").then(rawData =>{
 
     /*-----------------------Plot 1: Scatter Plot-------------------------*/
     //plot 1: Scatter Plot
-    const svg = d3.select("svg");
+    //const svg = d3.select("svg");
 
     // dashboard title - need to split using tspan to move text to newline
-    const title = svg.append("text")
-        .attr("x", 900)
-        .attr("y", 30)
-        .attr("text-anchor", "middle")
-        .attr("font-weight", "bold")
 
-    title.append("tspan")
-        .attr("x", 750)
-        .attr("dy", "0.5em")
-        .attr("font-size", "45px")
-        .text("Cosmetics Dashboard:");
-    
-    title.append("tspan")
-        .attr("x", 750)
-        .attr("dy", "1.7em")
-        .attr("font-size", "30px")
-        .text("Pricing, Ingredients, and Skin Type");
-    
-    //dashboard explanation - also use of tspan to move the text over to new lines
-    const description = svg.append("text")
-        .attr("x", 900)
-        .attr("y", 100)
-        .attr("text-anchor", "middle")
-        .attr("font-size", "17px")
-    
-    description.append("tspan")
-        .attr("x", 750)
-        .attr("dy", "3em")
-        .text("The Kaggle Cosmetics Dataset consists of several attributes");
-    
-    description.append("tspan")
-        .attr("x", 750)
-        .attr("dy", "1.2em")
-        .text("on skin type, products, list of ingredients, and price, to name");
-    
-    description.append("tspan")
-        .attr("x", 750)
-        .attr("dy", "1.2em")
-        .text(" a few. This dashboard explores the distribution of products");
-    
-    description.append("tspan")
-        .attr("x", 750)
-        .attr("dy", "1.2em")
-        .text("by skin type (normal, combination, oily, or sensitive), displays");
+    const g1 = d3.select("#scatter-plot")
+        .append("svg")
+        //.attr("id", "scatter-group")
+        .attr("width", scatterWidth + scatterMargin.left + scatterMargin.right + 120)
+        .attr("height", scatterHeight + scatterMargin.top + scatterMargin.bottom + 80)
 
-    description.append("tspan")
-        .attr("x", 750)
-        .attr("dy", "1.2em")
-        .text("the scatter of the number of ingredients vs. its product price,");
-    
-    description.append("tspan")
-        .attr("x", 750)
-        .attr("dy", "1.2em")
-        .text("and the mapping of top ingredients to the skin type.");
-
-    const g1 = svg.append("g")
-                .attr("width", scatterWidth + scatterMargin.left + scatterMargin.right)
-                .attr("height", scatterHeight + scatterMargin.top + scatterMargin.bottom)
-                .attr("transform", `translate(${scatterMargin.left}, ${scatterMargin.top})`);
-    
-    //Scatter Plot Title
-    g1.append("text")
-        .attr("x", scatterWidth / 2)
-        .attr("y", -18)
-        .attr("text-anchor", "middle")
-        .attr("font-size", "20px")
-        .attr("font-weight", "bold")
-        .text("Price vs. Ingredient Count by Skin Type");
+    const g1Inner = g1.append("g")
+        .attr("transform", `translate(${scatterMargin.left}, ${scatterMargin.top})`);
 
     // X label
-    g1.append("text")
-    .attr("x", scatterWidth / 2)
-    .attr("y", scatterHeight + 50)
-    .attr("font-size", "20px")
-    .attr("text-anchor", "middle")
-    .text("Price");
+    g1Inner.append("text")
+        .attr("x", scatterWidth / 2)
+        .attr("y", scatterHeight + 70)
+        .attr("font-size", "20px")
+        .attr("text-anchor", "middle")
+        .text("Price");
 
     // Y label
-    g1.append("text")
-    .attr("x", -(scatterHeight / 2))
-    .attr("y", -40)
-    .attr("font-size", "20px")
-    .attr("text-anchor", "middle")
-    .attr("transform", "rotate(-90)")
-    .text("Ingredient Count");
-
+    g1Inner.append("text")
+        .attr("x", -scatterHeight / 2)
+        .attr("y", -scatterMargin.left + 30)
+        .attr("font-size", "20px")
+        .attr("text-anchor", "middle")
+        .attr("transform", "rotate(-90)")
+        .text("Ingredient Count");
+        
     // X ticks
     const x1 = d3.scaleLinear()
-    .domain([0, d3.max(processedData, d => d.Price)])
-    .range([0, scatterWidth]);
+        .domain([0, d3.max(processedData, d => d.Price)])
+        .range([0, scatterWidth]);
 
     const xAxisCall = d3.axisBottom(x1)
-                    .ticks(7);
+         .ticks(7);
 
-    g1.append("g")
-    .attr("transform", `translate(0, ${scatterHeight})`)
-    .call(xAxisCall)
-    .selectAll("text")
-        .attr("y", "10")
-        .attr("x", "-5")
-        .attr("text-anchor", "end")
-        .attr("transform", "rotate(-40)");
+    const xAxis = g1Inner.append("g")
+         .attr("class", "x-axis")
+         .attr("transform", `translate(0, ${scatterHeight})`)
+         .call(xAxisCall);
+       
+    xAxis.selectAll("text")
+         .attr("y", "10")
+         .attr("x", "-5")
+         .attr("text-anchor", "end")
+         .attr("transform", "rotate(-40)");
 
     // Y ticks
     const y1 = d3.scaleLinear()
-    .domain([0, d3.max(processedData, d => d.IngredientsCount)])
-    .range([scatterHeight, 0]);
+        .domain([0, d3.max(processedData, d => d.IngredientsCount)])
+        .range([scatterHeight, 0]);
 
     const yAxisCall = d3.axisLeft(y1)
-                        .ticks(13);
-    g1.append("g").call(yAxisCall);
+        .ticks(13);
 
-    // circles
-    const circles = g1.selectAll("circle").data(processedData);
+    const yAxis = g1Inner.append("g")
+        .attr("class", "y-axis")
+        .call(yAxisCall);
+
+    const originalX = x1.copy();
+    const originalY = y1.copy();
+
+    g1Inner.append("defs")
+        .append("clipPath")
+        .attr("id", "clip")
+        .append("rect")
+        .attr("x", 0)
+        .attr("y", -20)
+        .attr("width", scatterWidth)
+        .attr("height", scatterHeight + 20);
+        
+    const scatterGroup = g1Inner.append("g")
+        .attr("clip-path", "url(#clip)");
 
     //create color scale based on skin type to differentiate color of circles on plot
     const colorScale = d3.scaleOrdinal()
     .domain(["Oily", "Normal", "Combination", "Sensitive"])
     .range(["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728"]);
 
-    //adds a circle svg element for each data point
-    circles.enter().append("circle")
-         .attr("cx", d => x1(d.Price))
-         .attr("cy", d => y1(d.IngredientsCount))
-         .attr("r", 5)
-         .attr("fill", d => colorScale(d.SkinType)); // different circle colors by skin type
-    
     // create a legend for the scatter plot
-    const legendGroup = svg.append("g")
-    .attr("transform", `translate(${scatterMargin.left + scatterWidth + 20}, ${scatterMargin.top + 40})`);
+    const legendGroup = g1.append("g")
+        .attr("transform", `translate(${scatterMargin.left + scatterWidth + 20}, ${scatterMargin.top})`);
 
     //add text label for each skin type in the legend item
     const legend = legendGroup.selectAll(".legend-item")
-    .data(colorScale.domain())
-    .enter()
-    .append("g")
-    .attr("class", "legend-item")
-    .attr("transform", (d, i) => `translate(0, ${i * 25})`);
+        .data(colorScale.domain())
+        .enter()
+        .append("g")
+        .attr("class", "legend-item")
+        .attr("transform", (d, i) => `translate(0, ${i * 25})`);
 
     //create circle for each skin type for legend
     legend.append("circle")
-    .attr("cx", 0)
-    .attr("cy", 0)
-    .attr("r", 7)
-    .attr("fill", d => colorScale(d));
+        .attr("cx", 0)
+        .attr("cy", 0)
+        .attr("r", 7)
+        .attr("fill", d => colorScale(d));
 
     //add text next to each corresponding circle
     legend.append("text")
-    .attr("x", 15)
-    .attr("y", 5)
-    .attr("font-size", "14px")
-    .text(d => d);
+        .attr("x", 15)
+        .attr("y", 5)
+        .attr("font-size", "14px")
+        .text(d => d);
+
+    // HW3 addition of filtering: option to click the legend item and it filters to show only that data on the scatter plot
+    let selectedSkin = null;
+    
+    legend.on("click", function(event, d) {
+        if (selectedSkin === d) {
+            selectedSkin = null;
+            scatterGroup.selectAll("circle")
+                .transition().duration(400)
+                .style("opacity", 1);
+        } else {
+            selectedSkin = d;
+            scatterGroup.selectAll("circle")
+                .transition().duration(500)
+                .style("opacity", e => e.SkinType === selectedSkin ? 1 : 0.1);
+        }
+    });
+
+    // define d3.brush()
+    const brush = d3.brush()
+    .extent([[0, 0], [scatterWidth, scatterHeight]])
+    .on("end", brushed);
+
+    scatterGroup.append("g")
+        .attr("class", "brush")
+        .call(brush);
+
+    // create the points
+    const dots = scatterGroup.selectAll("circle")
+        .data(processedData)
+        .enter().append("circle")
+        .attr("cx", d => x1(d.Price))
+        .attr("cy", d => y1(d.IngredientsCount))
+        .attr("r", 5)
+        .attr("fill", d => colorScale(d.SkinType))
+        .attr("class", d => `dot ${d.SkinType}`);
+    
+
+    // handle the brush with a brushed function
+    function brushed(event) {
+        if (!event.selection) return;
+
+        const [[x0, y0], [x1Sel, y1Sel]] = event.selection;
+        x1.domain([x0, x1Sel].map(x1.invert));
+        y1.domain([y1Sel, y0].map(y1.invert));
+
+        xAxis.transition().duration(1000).call(d3.axisBottom(x1));
+        yAxis.transition().duration(1000).call(d3.axisLeft(y1));
+
+        g1Inner.select(".x-axis")
+            .transition().duration(1000)
+            .call(d3.axisBottom(x1));
+
+        g1Inner.select(".y-axis")
+            .transition().duration(1000)
+            .call(d3.axisLeft(y1));
+
+        // Update only clipped circles
+        scatterGroup.selectAll("circle")
+            .transition().duration(1000)
+            .attr("cx", d => x1(d.Price))
+            .attr("cy", d => y1(d.IngredientsCount));
+
+        g1Inner.select(".brush").call(brush.move, null); // clears the brush
+    }
+
+    // create a reset button for users to revert to the start
+    const resetButton = document.createElement("button");
+        resetButton.textContent = "Reset Zoom";
+        resetButton.id = "reset-button";
+        document.getElementById("scatter-plot").appendChild(resetButton);
+
+    resetButton.addEventListener("click", () => {
+        x1.domain(originalX.domain());
+        y1.domain(originalY.domain());
+
+        xAxis.transition().duration(1000).call(d3.axisBottom(x1));
+        yAxis.transition().duration(1000).call(d3.axisLeft(y1));
+
+        g1Inner.selectAll("circle")
+            .transition().duration(1000)
+            .attr("cx", d => x1(d.Price))
+            .attr("cy", d => y1(d.IngredientsCount));
+    });
 
     /*-----------------------Plot 2: Bar Chart-------------------------*/
     //create the next svg group for bar chart and define const g2
-    const g2 = svg.append("g")
-                .attr("width", distrWidth + distrMargin.left + distrMargin.right)
-                .attr("height", distrHeight + distrMargin.top + distrMargin.bottom)
-                .attr("transform", `translate(${distrLeft}, ${distrTop})`);
+    const g2 = d3.select("#bar-chart")
+        .append("svg")
+        .attr("width", distrWidth + distrMargin.left + distrMargin.right)
+        .attr("height", distrHeight + distrMargin.top + distrMargin.bottom)
+        .attr("transform", `translate(${distrLeft}, ${distrTop})`);
 
     //plot 2: Bar Chart for Count of Products per Skin Type
 
@@ -240,37 +281,27 @@ d3.csv("data/cosmetics.csv").then(rawData =>{
         ];
     console.log("Skin Type Counts:", skinTypeCounts); 
 
-    // creates a new svg group g3 used for the bar chart to position margins
-    const g3 = svg.append("g")
-                .attr("width", barWidth + barMargin.left + barMargin.right)
-                .attr("height", barHeight + barMargin.top + barMargin.bottom)
-                .attr("transform", `translate(${barMargin.left}, ${barTop})`);
+    // creates a new svg group gBar used for the bar chart to position margins
+    const gBar = g2.append("g")
+        .attr("id", "bar-group")
+        .attr("transform", `translate(${barMargin.left}, ${barMargin.top})`);
 
     // x-axis
-    g3.append("text")
-    .attr("x", barWidth / 2)
+    gBar.append("text")
+    .attr("x", barWidth / 2.1)
     .attr("y", barHeight + 50)
     .attr("font-size", "20px")
     .attr("text-anchor", "middle")
     .text("Skin Type");
 
     // y-axis
-    g3.append("text")
+    gBar.append("text")
     .attr("x", -(barHeight / 2))
     .attr("y", -35)
     .attr("font-size", "20px")
     .attr("text-anchor", "middle")
     .attr("transform", "rotate(-90)")
     .text("Product Count");
-
-    // title
-    g3.append("text")
-    .attr("x", barWidth / 2)
-    .attr("y", 20)
-    .attr("text-anchor", "middle")
-    .attr("font-size", "24px")
-    .attr("font-weight", "bold")
-    .text("Product Count by Skin Type");
 
     // x-axis scale using d3.scaleBand -> used for bar charts as mentioned in the d3js website
     const x2 = d3.scaleBand()
@@ -281,15 +312,15 @@ d3.csv("data/cosmetics.csv").then(rawData =>{
     
     //draw and position x-axis
     const xAxisCall2 = d3.axisBottom(x2);
-    g3.append("g")
-    .attr("transform", `translate(0, ${barHeight})`)
-    .call(xAxisCall2)
-    .selectAll("text")
-        .attr("y", "10")
-        .attr("x", "-5")
-        .attr("font-size", "14px")
-        .attr("text-anchor", "end")
-        .attr("transform", "rotate(-40)");
+    gBar.append("g")
+        .attr("transform", `translate(0, ${barHeight})`)
+        .call(xAxisCall2)
+        .selectAll("text")
+            .attr("y", "10")
+            .attr("x", "-5")
+            .attr("font-size", "14px")
+            .attr("text-anchor", "end")
+            .attr("transform", "rotate(-40)");
 
     // y-axis scale
     const y2 = d3.scaleLinear()
@@ -300,24 +331,48 @@ d3.csv("data/cosmetics.csv").then(rawData =>{
     // draw and position y-axis
     const yAxisCall2 = d3.axisLeft(y2)
                         .ticks(6);
-    g3.append("g").call(yAxisCall2);
+
+    gBar.append("g").call(yAxisCall2);
 
     // bars
-    const bars = g3.selectAll("rect").data(skinTypeCounts);
+    const bars = gBar.selectAll("rect").data(skinTypeCounts);
+
+    // const tooltip div that allows us to create the interaction
+    const tooltip = d3.select("body").append("div")
+        .attr("class", "tooltip")
+        .style("opacity", 0);
 
     // creates one blue block per skin type for the bar chart in relation to the data
+    // HW 3: added mouseover and mouseout that will allow a user to hover over the bar to view the count
     bars.enter().append("rect")
-    .attr("y", d => y2(d.count))
-    .attr("x", d => x2(d.skin))
-    .attr("width", x2.bandwidth())
-    .attr("height", d => barHeight - y2(d.count))
-    .attr("fill", "steelblue");
+        .attr("y", d => y2(d.count))
+        .attr("x", d => x2(d.skin))
+        .attr("width", x2.bandwidth())
+        .attr("height", d => barHeight - y2(d.count))
+        .attr("class", "bar")
+        .attr("fill", "steelblue")
+        .on("mouseover", function(event, d) {
+            tooltip.transition().duration(500).style("opacity", .7);
+            tooltip.html(`Count: ${d.count}`)
+                .style("left", (event.pageX + 10) + "px")
+                .style("top", (event.pageY - 28) + "px");
+            d3.select(this).attr("fill", "green");
+        })
+        .on("mouseout", function() {
+            tooltip.transition().duration(500).style("opacity", 0);
+            d3.select(this).attr("fill", "steelblue");
+        });
 
     /*-----------------------Plot 3: Sankey Diagram-------------------------*/
 
     // group g4 defined as another svg object for the Sankey Diagram
-    const g4 = svg.append("g")
-        .attr("transform", `translate(${width - 600}, ${scatterMargin.top})`)
+    const g4 = d3.select("#sankey-diagram")
+        .append("svg")
+        .attr("width", sankeyWidth + sankeyMargin.left + sankeyMargin.right)
+        .attr("height", sankeyHeight + sankeyMargin.top + sankeyMargin.bottom);
+    
+    const gSankey = g4.append("g")
+        .attr("transform", `translate(${sankeyMargin.left + 100}, ${sankeyMargin.top})`);
         
     //create mapping for skincounts, skintypes, and the frequency of ingredients
     const ingredientSkinCounts = {};
@@ -372,8 +427,7 @@ d3.csv("data/cosmetics.csv").then(rawData =>{
         .extent([[0, 0], [500, 350]])(sankeyData);
 
     // append to g4 svg and create the rectangles for the nodes in sankey
-    g4.append("g")
-        .selectAll("rect")
+    gSankey.selectAll("rect")
         .data(sankeyLayout.nodes)
         .enter().append("rect")
         .attr("x", d => d.x0)
@@ -384,8 +438,7 @@ d3.csv("data/cosmetics.csv").then(rawData =>{
         .attr("stroke", "#000");
     
     // append to svg g4 and create the links between nodes in the sankey diagram 
-    g4.append("g")
-        .selectAll("path")
+    gSankey.selectAll("path")
         .data(sankeyLayout.links)
         .enter().append("path")
         .attr("d", d3.sankeyLinkHorizontal())
@@ -395,8 +448,7 @@ d3.csv("data/cosmetics.csv").then(rawData =>{
         .attr("opacity", 0.5);
 
     // label each node a.k.a. the top ingredients and the skin type
-    g4.append("g")
-        .selectAll("text")
+    gSankey.selectAll("text")
         .data(sankeyLayout.nodes)
         .enter().append("text")
         .attr("font-size", "14px")
@@ -410,7 +462,7 @@ d3.csv("data/cosmetics.csv").then(rawData =>{
     const totalNodeFlow = d3.sum(sankeyLayout.links, d => d.value);
 
     // for each node, label the percentage next to it, placed left or right based on if its an ingredient or a skin type
-    g4.append("g")
+    gSankey.append("svg")
     .selectAll("text")
     .data(sankeyLayout.nodes)
     .enter().append("text")
@@ -424,15 +476,6 @@ d3.csv("data/cosmetics.csv").then(rawData =>{
         const pct = (nodeValue / totalNodeFlow) * 100;
         return `${pct.toFixed(1)}%`;
     });
-
-    //title for sankey diagram
-    g4.append("text")
-        .attr("x", 250)
-        .attr("y", -20)
-        .attr("text-anchor", "middle")
-        .attr("font-size", "20px")
-        .attr("font-weight", "bold")
-        .text("Top 10 Ingredients Mapped to Skin Type Suitability");
 
 
     }).catch(function(error){

@@ -1,0 +1,112 @@
+/* styles.css */
+
+body {
+  font-family:Arial, Helvetica, sans-serif;
+  fill: #333;
+  font-weight: 500;
+  line-height: 1.2;     
+  margin: 0;
+  padding: 20px;
+  background-color: rgb(235, 237, 232); 
+}
+
+h1 {
+  color: #222;
+  margin-top: 20px;
+  text-align: center;
+  font-size: 50px;
+}
+
+p {
+  color: #222;
+  padding-left: 100px;
+  padding-right: 100px;
+  text-align: center;
+  font-size: 20px;
+}
+
+svg text {
+    font-family:'Times New Roman', Times, serif;
+    fill: #333;
+    font-weight: 500;
+  }
+
+#chart-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 30px;
+    margin-top: 20px;
+    align-items: flex-start;
+  }
+
+.chart-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 40px;
+    flex-wrap: wrap;
+    margin-bottom: 40px;
+  }
+  
+#scatter-plot {
+    background-color: #fff9f0;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    flex: 1;
+    min-width: 500px;
+    font-size: 16px;
+    text-align: center;
+  }
+
+#scatter-plot p {
+  font-size: 16px;
+}
+
+#reset-button {
+  position: relative;
+  right: 140px;   
+  bottom: 270px;  
+  padding: 8px 12px;
+  font-size: 14px;
+  background-color: white;
+  border: 1px solid black;
+  border-radius: 5px;
+  cursor: pointer;   
+}
+
+.tooltip {
+  position: absolute;
+  text-align: center;
+  padding: 6px;
+  font-size: 12px;
+  background: lightgray;
+  border: 0px;
+  border-radius: 4px;
+  pointer-events: none;
+}
+
+#bar-chart {
+  flex: 1;
+  min-width: 500px;
+  background-color: #fff9f0;
+  border-radius: 12px;  
+  padding: 20px;
+  box-shadow: 0 0 8px rgba(0,0,0,0.1);
+  font-size: 16px;
+  text-align: center;
+}
+
+#bar-chart p {
+  font-size: 16px;
+}
+
+#sankey-diagram {
+  text-align: center;
+  max-width: 900px;
+  border-radius: 12px;
+  padding: 20px;
+  background-color: #fff9f0;
+  box-shadow: 0 0 8px rgba(0,0,0,0.1);
+  overflow-x: auto;
+  margin: 0px auto 40px auto;
+}
